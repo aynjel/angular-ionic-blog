@@ -1,0 +1,7 @@
+{
+  "name": "angular-ionic-blog",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
