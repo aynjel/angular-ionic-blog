@@ -1,0 +1,82 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>Users</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-searchbar placeholder="Search User"></ion-searchbar>
+    <ion-card-content>
+      <ion-list lines="none">
+        <ion-item *ngFor="let user of users" [routerLink]="['/users', user.id]">
+          <ion-avatar slot="start">
+            <img [src]="user.avatar" />
+          </ion-avatar>
+          <ion-label>
+            <h2>{{ user.name }}</h2>
+            <h3>{{ user.email }}</h3>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" id="open-modal">
+    <ion-fab-button color="primary">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancel()">Cancel</ion-button>
+          </ion-buttons>
+          <ion-title class="ion-text-center">
+            New User
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item>
+          <ion-input label="Name" labelPlacement="floating" placeholder="Enter Name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Email" labelPlacement="floating" placeholder="Enter Email"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Password" labelPlacement="floating" placeholder="Enter Password" type="password"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Confirm Password" labelPlacement="floating" placeholder="Enter Confirm Password" type="password"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-select label="Education" label-placement="stacked" placeholder="Choose Education">
+            <ion-select-option *ngFor="let education of educations" value={{education.name}}>
+              {{education.name}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Birthdate" labelPlacement="floating" placeholder="Enter Birthdate" type="date"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-select label="Gender" label-placement="stacked" placeholder="Choose Gender">
+            <ion-select-option *ngFor="let gender of genders" value={{gender.name}}>
+              {{gender.name}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Company" labelPlacement="floating" placeholder="Enter Company"></ion-input>
+        </ion-item>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
