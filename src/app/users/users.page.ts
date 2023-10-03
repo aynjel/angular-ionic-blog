@@ -1,6 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
+import { User, UserService } from '../services/user/user.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AlertController } from '@ionic/angular';  
 
 @Component({
   selector: 'app-users',
@@ -9,44 +12,23 @@ import { OverlayEventDetail } from '@ionic/core/components';
 })
 export class UsersPage implements OnInit {
 
-  users = [
-    {
-      id: 1,
-      name: 'Leanne Graham',
-      username: 'Bret',
-      email: 'lean@gmail.com',
-      phone: '1-770-736-8031 x56442',
-      avatar: 'https://image.lexica.art/full_jpg/34e56304-34e0-44c6-8a56-4c1a83d0ef47',
-      website: 'hildegard.org'
-    },
-    {
-      id: 2,
-      name: 'Ervin Howell',
-      username: 'Antonette',
-      email: 'ervin@gmail.com',
-      phone: '010-692-6593 x09125',
-      avatar: 'https://i.pinimg.com/736x/41/9c/7d/419c7d36a42168e580488bec67306eeb.jpg',
-      website: 'anastasia.net'
-    },
-    {
-      id: 3,
-      name: 'Clementine Bauch',
-      username: 'Samantha',
-      email: 'clemen@gmail.com',
-      phone: '1-463-123-4447',
-      avatar: 'https://byuc.files.wordpress.com/2012/07/avat-2.jpg',
-      website: 'ramiro.info'
-    },
-    {
-      id: 4,
-      name: 'Patricia Lebsack',
-      username: 'Karianne',
-      email: 'pat@gmail.com',
-      phone: '493-170-9623 x156',
-      avatar: 'https://img.freepik.com/premium-vector/avatar-woman-with-brown-hair-red-top_825692-913.jpg?w=2000',
-      website: 'kale.biz'
-    },
-  ];
+  @ViewChild(IonModal) modal?: IonModal;
+  
+  users: User[] = [];
+  isEditForm: boolean = false;
+
+  id?: number;
+  name: string = '';
+  email: string = '';
+  password: string = '';
+  confirmPassword: string = '';
+  img: string = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png';
+  education: string = '';
+  gender: string = '';
+  dob: string = '';
+  company: string = '';
+  role: string = '';
+  status: string = '';
 
   educations = [
     {
@@ -67,34 +49,113 @@ export class UsersPage implements OnInit {
     {
       name: "Female"
     },
-    {
-      name: "LGBTQ"
-    },
   ];
-  
-  @ViewChild(IonModal) modal?: IonModal;
-
-  message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
-  name?: string;
 
   cancel() {
     this.modal?.dismiss(null, 'cancel');
   }
 
   confirm() {
-    this.modal?.dismiss(this.name, 'confirm');
+    this.modal?.dismiss({
+      name: this.name,
+      email: this.email,
+      password: this.password,
+      img: this.img,
+      education: this.education,
+      gender: this.gender,
+      dob: this.dob,
+      company: this.company,
+    }, 'confirm-create');
   }
 
   onWillDismiss(event: Event) {
-    const ev = event as CustomEvent<OverlayEventDetail<string>>;
-    if (ev.detail.role === 'confirm') {
-      this.message = `Hello, ${ev.detail.data}!`;
+    const detail = (event as CustomEvent<OverlayEventDetail<any>>).detail;
+    if (detail.role === 'confirm-create') {
+      this.addUser({
+        name: detail.data.name,
+        email: detail.data.email,
+        password: detail.data.password,
+        img: detail.data.img,
+        education: detail.data.education,
+        gender: detail.data.gender,
+        dob: detail.data.dob,
+        company: detail.data.company,
+      });
     }
+
+    this.id = undefined;
+    this.name = '';
+    this.email = '';
+    this.password = '';
+    this.confirmPassword = '';
+    this.img = '';
+    this.education = '';
+    this.gender = '';
+    this.dob = '';
+    this.company = '';
+    this.isEditForm = false;
   }
 
-  constructor() { }
+  openUser(user: User){
+    this.isEditForm = true;
+    this.id = user.id;
+    this.name = user.name;
+    this.email = user.email;
+    this.password = user.password;
+    this.img = user.img;
+    this.education = user.education;
+    this.gender = user.gender;
+    this.dob = user.dob;
+    this.company = user.company;
+    this.modal?.present();
+  }
 
-  ngOnInit() {
+  constructor(
+    private userService: UserService,
+    public alertController: AlertController,
+    ) {
+      this.LoadUsers();
+    }
+
+  ngOnInit() { }
+
+  LoadUsers() {
+    this.userService.getUsers()
+    .subscribe({
+      next: (users: User[]) => {
+        this.users = users;
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+      }
+    });
+  }
+
+  addUser(user: User) {
+    // check id password and confirm password are the same
+    if (user.password !== this.confirmPassword) {
+      this.alertController.create({
+        header: 'Password Mismatch',
+        message: 'Password and Confirm Password must be the same.',
+        buttons: ['OK']
+      }).then(alert => {
+        alert.present();
+      });
+      return;
+    }
+    // check if user data is not empty
+    if (Object.keys(user).length !== 0) {
+      this.userService.addUser(user)
+      .subscribe({
+        next: (data: User) => {
+          this.LoadUsers();
+          console.log(data);
+        },
+        error: (err: HttpErrorResponse) => {
+          console.log(err);
+        }
+      });
+    }
   }
 
 }

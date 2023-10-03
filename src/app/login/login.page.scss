@@ -1,0 +1,35 @@
+.form-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
+}
+
+.form-content form{
+    width: 100%;
+}
+
+ion-card-title{
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.submitBtn{
+    margin: 10px;
+}
+
+.forgotBtn{
+    padding: 0px;
+    margin: 0px;
+    font-size: 12px;
+}
+
+ion-input{
+    width: 100%;
+}
+
+ion-list{
+    margin: 10px;
+}

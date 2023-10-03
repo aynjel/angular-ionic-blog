@@ -4,18 +4,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { TodosPageRoutingModule } from './todos-routing.module';
+import { LoginPageRoutingModule } from './login-routing.module';
 
-import { TodosPage } from './todos.page';
+import { LoginPage } from './login.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TodosPageRoutingModule,
+    LoginPageRoutingModule,
     ReactiveFormsModule
   ],
-  declarations: [TodosPage]
+  declarations: [LoginPage]
 })
-export class TodosPageModule {}
+export class LoginPageModule {}
