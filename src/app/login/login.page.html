@@ -11,20 +11,20 @@
             <ion-label position="floating">Email</ion-label>
             <ion-input type="text" formControlName="email"></ion-input>
           </ion-item>
-          <ion-label class="error" *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched">Email is required</ion-label>
-          <ion-label class="error" *ngIf="loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched">Email is invalid</ion-label>
+          <app-error-message message="Email is required" [hidden]="!loginForm.get('email')?.hasError('required') || !loginForm.get('email')?.touched"></app-error-message>
+          <app-error-message message="Email is invalid" [hidden]="!loginForm.get('email')?.hasError('email') || !loginForm.get('email')?.touched"></app-error-message>
 
           <ion-item>
             <ion-label position="floating">Password</ion-label>
             <ion-input type="password" formControlName="password"></ion-input>
           </ion-item>
-          <ion-label class="error" *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched">Password is required</ion-label>
-          <ion-label class="error" *ngIf="loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched">Password must be at least 6 characters</ion-label>
+          <app-error-message message="Password is required" [hidden]="!loginForm.get('password')?.hasError('required') || !loginForm.get('password')?.touched"></app-error-message>
+          <app-error-message message="Password must be at least 6 characters" [hidden]="!loginForm.get('password')?.hasError('minlength') || !loginForm.get('password')?.touched"></app-error-message>
 
         </ion-list>
         
       </ion-card>
-        <ion-button class="forgotBtn" fill="clear" [disabled]="!loginForm.get('email')?.valid">Forgot Password?</ion-button>
+        <ion-button class="forgotBtn" fill="clear" [disabled]="!loginForm.get('email')?.valid" (click)="forgotEmailPassword()">Forgot Password?</ion-button>
       
       <ion-button class="submitBtn" expand="block" type="submit" color="primary" [disabled]="!loginForm.valid" (click)="login()">Login</ion-button>
       
